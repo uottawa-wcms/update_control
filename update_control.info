@@ -1,0 +1,10 @@
+name = "Update Control"
+description = "Adds a configuration option for managing where modules are checked for updates."
+package = "Development"
+core = 7.x
+
+dependencies[] = update
+
+files[] = update_control.module
+
+version = "7.x-1.0-b1"

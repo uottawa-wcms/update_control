@@ -1,0 +1,30 @@
+<?php
+
+  function update_control_form_alter(&$form, &$state, $id) {
+    if ($id == 'update_settings') {
+      update_control_update_settings_form($form, $state);
+    }
+  }
+
+  function update_control_update_settings_form_validate($form, &$form_state) {
+    $valid = FALSE;
+    if (!empty($form_state['values']['update_fetch_url'])) {
+      if (filter_var($form_state['values']['update_fetch_url'], FILTER_VALIDATE_URL)) {
+        $valid = TRUE;
+      }
+    }
+    if (!$valid) {
+      $form_state['values']['update_fetch_url'] = UPDATE_DEFAULT_URL;
+      drupal_set_message(t('Invalid URL set for the base URL, loading default'), 'warning');
+    }
+  }
+
+  function update_control_update_settings_form(&$form, &$form_state) {
+    $form['update_fetch_url'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Base URL for loading updates'),
+      '#default_value' => variable_get('update_fetch_url', UPDATE_DEFAULT_URL),
+      '#description' => t('This URL will be used as a base for checking for updates. Set it to your local server if you do not want to use drupal.org for updates.'),
+    );
+    $form['#validate'][] = 'update_control_update_settings_form_validate';
+  }
